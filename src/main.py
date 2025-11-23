@@ -1,6 +1,7 @@
 from src.sorting.cli import app
 
 def main() -> None:
+    """The entry point of the application."""
     app()
 
 

@@ -2,6 +2,19 @@ import random
 
 
 def rand_int_array(n: int, lo: int, hi: int, *, distinct=False, seed=None) -> list[int]:
+    """
+    Generate random integer array
+    Args:
+        n (int): length of array
+        lo (int): lower bound of array
+        hi (int): upper bound of array
+        distinct (bool, optional): whether to generate distinct numbers. Defaults to False.
+        seed (int, optional): random seed. Defaults to None.
+
+    Returns:
+        list[int]: array of random integers
+    """
+
     if lo > hi:
         raise ValueError(f"lo ({lo}) must be <= hi ({hi})")
 
@@ -21,6 +34,16 @@ def rand_int_array(n: int, lo: int, hi: int, *, distinct=False, seed=None) -> li
 
 
 def nearly_sorted(n: int, swaps: int, *, seed=None) -> list[int]:
+    """
+    Generate nearly sorted array
+    Args:
+        n (int): length of array
+        swaps (int): number of swaps
+        seed (int, optional): random seed. Defaults to None.
+    Returns:
+        list[int]: array of nearly sorted integers
+    """
+
     if seed is not None:
         random.seed(seed)
 
@@ -34,6 +57,18 @@ def nearly_sorted(n: int, swaps: int, *, seed=None) -> list[int]:
 
 
 def many_duplicates(n: int, k_unique=5, *, lo: int = 0, hi: int = 100, seed=None) -> list[int]:
+    """
+    Generate many duplicate numbers
+    Args:
+        n (int): length of array
+        k_unique (int, optional): number of unique numbers. Defaults to 5.
+        lo (int, optional): lower bound of array
+        hi (int, optional): upper bound of array
+        seed (int, optional): random seed. Defaults to None.
+    Returns:
+        list[int]: array of many duplicate numbers
+    """
+
     if seed is not None:
         random.seed(seed)
 
@@ -51,6 +86,14 @@ def many_duplicates(n: int, k_unique=5, *, lo: int = 0, hi: int = 100, seed=None
 
 
 def reverse_sorted(n: int) -> list[int]:
+    """
+    Generate reverse sorted array
+    Args:
+        n (int): length of array
+    Returns:
+        list[int]: array of reverse sorted integers
+    """
+
     if n <= 0:
         raise ValueError(f"n ({n}) must be > 0")
     arr = list(range(n))[-1::-1]
@@ -58,6 +101,16 @@ def reverse_sorted(n: int) -> list[int]:
 
 
 def rand_float_array(n: int, lo=0.0, hi=1.0, *, seed=None) -> list[float]:
+    """
+    Generate random float array
+    Args:
+        n (int): length of array
+        lo (float, optional): lower bound of array
+        hi (float, optional): upper bound of array
+        seed (int, optional): random seed. Defaults to None.
+    Returns:
+        list[float]: array of random floats
+    """
     if seed is not None:
         random.seed(seed)
 

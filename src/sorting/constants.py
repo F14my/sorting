@@ -1,11 +1,11 @@
 from typing import Callable
-from src.sorting.sorts import bubble_sort, quick_sort, count_sort, radix_sort, insertion_sort, bucket_sort, heap_sort
+from src.sorting.sorts import bubble_sort, quick_sort, counting_sort, radix_sort, insertion_sort, bucket_sort, heap_sort
 from src.generators import rand_int_array, nearly_sorted, many_duplicates, reverse_sorted, rand_float_array
 
 ALGOS: dict[str, Callable] = {
     "bubble": bubble_sort,
     "quick": quick_sort,
-    "count": count_sort,
+    "count": counting_sort,
     "radix": radix_sort,
     "insertion": insertion_sort,
     "bucket": bucket_sort,

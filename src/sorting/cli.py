@@ -6,6 +6,7 @@ app = typer.Typer()
 
 
 def print_help_commands() -> None:
+    """Prints help commands."""
     typer.echo("Доступные команды:")
     typer.echo("help                  - показать это сообщение")
     typer.echo("show config           - текущие настройки")

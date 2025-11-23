@@ -1,4 +1,13 @@
 def bubble_sort(arr: list[int]) -> list[int]:
+    """
+    Bubble sort algorithm
+
+    Args:
+        arr (list[int]): the array to be sorted
+
+    Returns:
+        list[int]: the sorted array
+    """
     for i in range(len(arr)):
         for j in range(len(arr) - i - 1):
             if arr[j] > arr[j + 1]:
@@ -7,6 +16,7 @@ def bubble_sort(arr: list[int]) -> list[int]:
 
 
 def median(a: list[int], i: int, j: int, k: int) -> int:
+    """Median function to find the median(uses in quick sort)"""
     ai, aj, ak = a[i], a[j], a[k]
 
     if ai <= aj <= ak or ak <= aj <= ai:
@@ -16,6 +26,15 @@ def median(a: list[int], i: int, j: int, k: int) -> int:
     return k
 
 def quick_sort(arr: list[int]) -> list[int]:
+    """
+    Quick sort algorithm
+
+    Args:
+        arr (list[int]): the array to be sorted
+
+    Returns:
+        list[int]: the sorted array
+    """
     n = len(arr)
     if n <= 1:
         return arr
@@ -30,7 +49,16 @@ def quick_sort(arr: list[int]) -> list[int]:
     return quick_sort(less) + middle + quick_sort(greater)
 
 
-def count_sort(arr: list[int]) -> list[int]:
+def counting_sort(arr: list[int]) -> list[int]:
+    """
+    Count sort algorithm
+
+    Args:
+        arr (list[int]): the array to be sorted
+
+    Returns:
+        list[int]: the sorted array
+    """
     n = len(arr)
     max_value = max(arr)
     cnt_arr = [0] * (max_value + 1)
@@ -46,6 +74,16 @@ def count_sort(arr: list[int]) -> list[int]:
 
 
 def radix_sort(arr: list[int], base: int = 10) -> list[int]:
+    """
+    Radix sort algorithm
+
+    Args:
+        arr (list[int]): the array to be sorted
+        base (int, optional): base. Defaults to 10.
+
+    Returns:
+        list[int]: the sorted array
+    """
     max_digit = max([len(str(elem)) for elem in arr])
     bins = [[] for _ in range(base)]
     for i in range(0, max_digit):
@@ -57,6 +95,15 @@ def radix_sort(arr: list[int], base: int = 10) -> list[int]:
     return arr
 
 def insertion_sort(arr: list[int]) -> list[int]:
+    """
+    Insertion sort algorithm
+
+    Args:
+        arr (list[int]): the array to be sorted
+
+    Returns:
+        list[int]: the sorted array
+    """
     for i in range(1, len(arr)):
         key = arr[i]
         j = i - 1
@@ -67,6 +114,16 @@ def insertion_sort(arr: list[int]) -> list[int]:
     return arr
 
 def bucket_sort(arr: list[float], n: int | None = None) -> list[float]:
+    """
+    Bucket sort algorithm
+
+    Args:
+        arr (list[float]): the array to be sorted
+        n (int, optional): n - count of buckets. Defaults to None
+
+    Returns:
+        list[float]: the sorted array
+    """
     if n is None:
         n = len(arr)
     buckets = [[] for _ in range(n)]
@@ -82,6 +139,17 @@ def bucket_sort(arr: list[float], n: int | None = None) -> list[float]:
 
 
 def heapify(arr: list[int], n: int, i: int) -> None:
+    """
+    Heapify function for heap_sort
+
+    Args:
+        arr (list[int]): the array
+        n (int, optional): len(arr)
+        i (int, optional): i - index
+
+    Returns:
+        None
+    """
     largest = i
     left = 2 * i + 1
     right = 2 * i + 2
@@ -96,6 +164,15 @@ def heapify(arr: list[int], n: int, i: int) -> None:
         heapify(arr, n, largest)
 
 def heap_sort(arr: list[int]) -> list[int]:
+    """
+    Heap sort algorithm
+
+    Args:
+        arr (list[int]): the array to be sorted
+
+    Returns:
+        list[int]: the sorted array
+    """
     n = len(arr)
     for i in range(n // 2 - 1, -1, -1):
         heapify(arr, n, i)
