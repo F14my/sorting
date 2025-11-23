@@ -1,39 +1,101 @@
-def bubble_sort(arr: list[int]) -> list[int]:
+from typing import TypeVar, Callable, Optional, Any
+
+T = TypeVar("T")
+
+
+def compare(a: T, b: T, key: Optional[Callable[[T], Any]] = None, cmp: Optional[Callable[[T, T], int]] = None, ) -> int:
+    """
+    Universal comparison of two elements taking into account key/cmp.
+
+    Args:
+        a (T): first element
+        b (T): second element
+        key (Optional[Callable[[T], Any]]): key function
+        cmp (Optional[Callable[[T, T], int]]): comparison function
+
+    Returns:
+        int: comparison result
+        if a < b:
+            return -1
+        if a > b:
+            return 1
+        if a == b:
+            return 0
+    """
+    if cmp is not None:
+        return cmp(a, b)
+    if key is not None:
+        a, b = key(a), key(b)
+    if a < b:
+        return -1
+    if a > b:
+        return 1
+    return 0
+
+
+def is_greater(a: T, b: T, key: Optional[Callable[[T], Any]] = None,
+               cmp: Optional[Callable[[T, T], int]] = None, ) -> bool:
+    """
+    Helpful function for comparing two elements
+    Args:
+        a (T): first element
+        b (T): second element
+        key (Optional[Callable[[T], Any]]): key function
+        cmp (Optional[Callable[[T, T], int]]): comparison function
+
+    Returns:
+        bool: True if 'a' is greater than 'b'
+    """
+    return compare(a, b, key=key, cmp=cmp) > 0
+
+
+def bubble_sort(arr: list[T], *, key: Optional[Callable[[T], Any]] = None,
+                cmp: Optional[Callable[[T, T], int]] = None, ) -> list[T]:
     """
     Bubble sort algorithm
 
     Args:
-        arr (list[int]): the array to be sorted
+        arr (list[T]): the array to be sorted
+        key (Optional[Callable[[T], Any]]): key function
+        cmp (Optional[Callable[[T, T], int]]): comparison function
 
     Returns:
-        list[int]: the sorted array
+        list[T]: the sorted array
     """
-    for i in range(len(arr)):
-        for j in range(len(arr) - i - 1):
-            if arr[j] > arr[j + 1]:
+    n = len(arr)
+    for i in range(n):
+        for j in range(n - i - 1):
+            if is_greater(arr[j], arr[j + 1], key, cmp):
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
     return arr
 
 
-def median(a: list[int], i: int, j: int, k: int) -> int:
+def median(a: list[T], i: int, j: int, k: int, *, key: Optional[Callable[[T], Any]] = None,
+           cmp: Optional[Callable[[T, T], int]] = None, ) -> int:
     """Median function to find the median(uses in quick sort)"""
     ai, aj, ak = a[i], a[j], a[k]
 
-    if ai <= aj <= ak or ak <= aj <= ai:
+    def le(u: T, v: T) -> bool:
+        return compare(u, v, key=key, cmp=cmp) <= 0
+
+    if (le(ai, aj) and le(aj, ak)) or (le(ak, aj) and le(aj, ai)):
         return j
-    if aj <= ai <= ak or ak <= ai <= aj:
+    if (le(aj, ai) and le(ai, ak)) or (le(ak, ai) and le(ai, aj)):
         return i
     return k
 
-def quick_sort(arr: list[int]) -> list[int]:
+
+def quick_sort(arr: list[T], *, key: Optional[Callable[[T], Any]] = None,
+               cmp: Optional[Callable[[T, T], int]] = None, ) -> list[T]:
     """
-    Quick sort algorithm
+    Quick sort algorithm.
 
     Args:
-        arr (list[int]): the array to be sorted
-
+        arr (list[T]): the array to be sorted
+        key (Optional[Callable[[T], Any]]): key function
+        cmp (Optional[Callable[[T, T], int]]): comparison function
     Returns:
-        list[int]: the sorted array
+        list[T]: the sorted array
     """
     n = len(arr)
     if n <= 1:
@@ -43,10 +105,21 @@ def quick_sort(arr: list[int]) -> list[int]:
     mid = (left + right) // 2
     pivot_idx = median(arr, left, right, mid)
     pivot = arr[pivot_idx]
-    less = list(filter(lambda x: x < pivot, arr))
-    middle = list(filter(lambda x: x == pivot, arr))
-    greater = list(filter(lambda x: x > pivot, arr))
-    return quick_sort(less) + middle + quick_sort(greater)
+
+    less: list[T] = []
+    middle: list[T] = []
+    greater: list[T] = []
+
+    for x in arr:
+        c = compare(x, pivot, key=key, cmp=cmp)
+        if c < 0:
+            less.append(x)
+        elif c == 0:
+            middle.append(x)
+        else:
+            greater.append(x)
+
+    return quick_sort(less, key=key, cmp=cmp) + middle + quick_sort(greater, key=key, cmp=cmp)
 
 
 def counting_sort(arr: list[int]) -> list[int]:
@@ -97,24 +170,29 @@ def radix_sort(arr: list[int], base: int = 10) -> list[int]:
         bins = [[] for _ in range(base)]
     return arr
 
-def insertion_sort(arr: list[int]) -> list[int]:
+
+def insertion_sort(arr: list[T], *, key: Optional[Callable[[T], Any]] = None,
+                   cmp: Optional[Callable[[T, T], int]] = None, ) -> list[T]:
     """
     Insertion sort algorithm
 
     Args:
-        arr (list[int]): the array to be sorted
+        arr (list[T]): the array to be sorted
+        key (Optional[Callable[[T], Any]], optional): key function. Defaults to None.
+        cmp (Optional[Callable[[T, T], Any]], optional): comparison function. Defaults to None.
 
     Returns:
-        list[int]: the sorted array
+        list[T]: the sorted array
     """
     for i in range(1, len(arr)):
-        key = arr[i]
+        cur = arr[i]
         j = i - 1
-        while j >= 0 and key < arr[j]:
+        while j >= 0 and is_greater(arr[j], cur, key, cmp):
             arr[j + 1] = arr[j]
             j -= 1
-        arr[j + 1] = key
+        arr[j + 1] = cur
     return arr
+
 
 def bucket_sort(arr: list[float], n: int | None = None) -> list[float]:
     """
@@ -133,7 +211,6 @@ def bucket_sort(arr: list[float], n: int | None = None) -> list[float]:
     for num in arr:
         buckets[int(n * num)].append(num)
 
-
     for bucket in buckets:
         insertion_sort(bucket)
 
@@ -141,14 +218,17 @@ def bucket_sort(arr: list[float], n: int | None = None) -> list[float]:
     return arr
 
 
-def heapify(arr: list[int], n: int, i: int) -> None:
+def heapify(arr: list[T], n: int, i: int, *, key: Optional[Callable[[T], Any]] = None,
+            cmp: Optional[Callable[[T, T], int]] = None, ) -> None:
     """
-    Heapify function for heap_sort
+    The part of heap sort algorithm
 
     Args:
-        arr (list[int]): the array
-        n (int, optional): len(arr)
-        i (int, optional): i - index
+        arr (list[T]): the array to be sorted
+        n (int): length of array
+        i (int): index
+        key (Optional[Callable[[T], Any]], optional): key function. Defaults to None.
+        cmp (Optional[Callable[[T, T], Any]], optional): comparison function. Defaults to None.
 
     Returns:
         None
@@ -156,32 +236,37 @@ def heapify(arr: list[int], n: int, i: int) -> None:
     largest = i
     left = 2 * i + 1
     right = 2 * i + 2
-    if left < n and arr[left] > arr[largest]:
+
+    if left < n and is_greater(arr[left], arr[largest], key, cmp):
         largest = left
 
-    if right < n and arr[right] > arr[largest]:
+    if right < n and is_greater(arr[right], arr[largest], key, cmp):
         largest = right
 
     if largest != i:
         arr[i], arr[largest] = arr[largest], arr[i]
-        heapify(arr, n, largest)
+        heapify(arr, n, largest, key=key, cmp=cmp)
 
-def heap_sort(arr: list[int]) -> list[int]:
+
+def heap_sort(arr: list[T], *, key: Optional[Callable[[T], Any]] = None,
+              cmp: Optional[Callable[[T, T], int]] = None, ) -> list[T]:
     """
     Heap sort algorithm
 
     Args:
-        arr (list[int]): the array to be sorted
-
+        arr (list[T]): the array to be sorted
+        key (Optional[Callable[[T], Any]], optional): key function. Defaults to None.
+        cmp (Optional[Callable[[T, T], Any]], optional): comparison function. Defaults to None.
     Returns:
-        list[int]: the sorted array
+        list[T]: the sorted array
     """
     n = len(arr)
     for i in range(n // 2 - 1, -1, -1):
-        heapify(arr, n, i)
+        heapify(arr, n, i, key=key, cmp=cmp)
 
     for i in range(n - 1, 0, -1):
         arr[0], arr[i] = arr[i], arr[0]
-        heapify(arr, i, 0)
+        heapify(arr, i, 0, key=key, cmp=cmp)
 
     return arr
+
