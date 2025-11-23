@@ -72,5 +72,3 @@ def rand_float_array(n: int, lo=0.0, hi=1.0, *, seed=None) -> list[float]:
 
     return [random.uniform(lo, hi) for _ in range(n)]
 
-
-print(rand_float_array(10))

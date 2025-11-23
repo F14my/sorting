@@ -6,10 +6,24 @@ def bubble_sort(arr: list[int]) -> list[int]:
     return arr
 
 
+def median(a: list[int], i: int, j: int, k: int) -> int:
+    ai, aj, ak = a[i], a[j], a[k]
+
+    if ai <= aj <= ak or ak <= aj <= ai:
+        return j
+    if aj <= ai <= ak or ak <= ai <= aj:
+        return i
+    return k
+
 def quick_sort(arr: list[int]) -> list[int]:
-    if len(arr) <= 1:
+    n = len(arr)
+    if n <= 1:
         return arr
-    pivot = arr[-1]
+
+    left, right = 0, n - 1
+    mid = (left + right) // 2
+    pivot_idx = median(arr, left, right, mid)
+    pivot = arr[pivot_idx]
     less = list(filter(lambda x: x < pivot, arr))
     middle = list(filter(lambda x: x == pivot, arr))
     greater = list(filter(lambda x: x > pivot, arr))
@@ -53,6 +67,8 @@ def insertion_sort(arr: list[int]) -> list[int]:
     return arr
 
 def bucket_sort(arr: list[float], n: int | None = None) -> list[float]:
+    if n is None:
+        n = len(arr)
     buckets = [[] for _ in range(n)]
     for num in arr:
         buckets[int(n * num)].append(num)
