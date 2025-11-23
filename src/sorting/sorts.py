@@ -84,7 +84,10 @@ def radix_sort(arr: list[int], base: int = 10) -> list[int]:
     Returns:
         list[int]: the sorted array
     """
-    max_digit = max([len(str(elem)) for elem in arr])
+    max_num = max(arr)
+    max_digit = 0
+    while base ** max_digit <= max_num:
+        max_digit += 1
     bins = [[] for _ in range(base)]
     for i in range(0, max_digit):
         for x in arr:

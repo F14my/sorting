@@ -136,7 +136,7 @@ def interactive_session():
             for algo_name, by_array in results.items():
                 typer.echo(f"\nАлгоритм: {algo_name}")
                 for arr_name, t in by_array.items():
-                    typer.echo(f"  {arr_name}: {t:.6f} сек")
+                    typer.echo(f"{arr_name}: {t:.6f} сек")
             continue
 
         typer.echo(f"Неизвестная команда: '{cmd}'. Напиши 'help'.")
