@@ -1,6 +1,7 @@
 import typer
 from src.sorting.constants import ALGOS, INT_ARRAY_TYPES, FLOAT_ARRAY_TYPES
 from src.benchmark import benchmark_sorts
+from tabulate import tabulate
 
 app = typer.Typer()
 
@@ -113,7 +114,8 @@ def interactive_session():
         if cmd == "run bench":
             typer.echo("Запуск бенчмарка для всех алгоритмов и всех типов массивов...")
 
-            results = {}
+            results: dict[str, dict[str, float]] = {}
+
             for algo_name, algo_func in ALGOS.items():
                 if algo_name == "bucket":
                     arrays = {
@@ -125,18 +127,29 @@ def interactive_session():
                         name: gen(current_size)
                         for name, gen in INT_ARRAY_TYPES.items()
                     }
-                results[algo_name] = {}
-                for arr_name, arr in arrays.items():
-                    avg_time = benchmark_sorts(
-                        {arr_name: arr},
-                        {algo_name: algo_func},
-                    )[algo_name][arr_name]
-                    results[algo_name][arr_name] = avg_time
+                bench_result = benchmark_sorts(arrays, {algo_name: algo_func})
+                results[algo_name] = bench_result[algo_name]
 
             for algo_name, by_array in results.items():
                 typer.echo(f"\nАлгоритм: {algo_name}")
                 for arr_name, t in by_array.items():
                     typer.echo(f"{arr_name}: {t:.6f} сек")
-            continue
 
-        typer.echo(f"Неизвестная команда: '{cmd}'. Напиши 'help'.")
+            table_rows: list[list[str]] = []
+            for algo_name, by_array in results.items():
+                for arr_name, t in by_array.items():
+                    table_rows.append([algo_name, arr_name, f"{t:.6f}"])
+
+            md_table = tabulate(
+                table_rows,
+                headers=["Алгоритм", "Тип массива", "Время, сек"],
+                tablefmt="github",
+            )
+            with open("benchmark.md", "w", encoding="utf-8") as f:
+                f.write("# Результаты бенчмарков сортировок\n\n")
+                f.write(f"Размер массива: {current_size}\n\n")
+                f.write(md_table)
+                f.write("\n")
+
+            typer.echo("\nРезультаты бенчмарка записаны в benchmark.md")
+            continue
